@@ -1,0 +1,248 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+{{project.project_name}}
+{% endblock title %}
+
+{% block header %}
+Chi tiết {{project.project_name}}
+{% endblock header %}
+
+{% block content %}
+<section id='project-detail-section'>
+    <div class="container">
+        <div class=row>
+            <div class='col'></div>
+            <div class='col-6'>
+                <div id='setting-btn-area'>
+                    <div>
+                        {% if project.progress < 25 %}
+                        <button type="button" id='repair-project-btn'><span class='fas fa-wrench'></span> Sửa</button>
+                        <button type="button" id='change-confirm-btn' hidden><span class='fas fa-check'></span> OK</button>
+                        {% else %}
+                        {% endif %}
+                        {% if project.payment_status == project.PaymentStatus.WAITING_FOR_DEPOSIT %}
+                        <button type="button" id='delete-project-btn' data-toggle="modal" data-target="#deleteModal"><span class='fas fa-trash'></span> Xóa</button>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div id='detail-info'>
+                    <div class='form-group row'>
+                        <label for="project_name_input" class="col-sm-4 col-form-label">Tên dự án</label>
+                        <input type="text" readonly id="project_name_input" class='form-control' value="{{project.project_name}}">
+                        <small id='project-name-error' style="color: red;"></small>
+                    </div>
+                    <div class='form-group'>
+                        <label for="project_user_input" class="col-form-label">User</label>
+                        <p id='project_user_input' class='col-form-label'>{{request.user}}</p>
+                    </div>
+                    <div class='form-group row'>
+                        <label for="project_type_input" class="col-sm-4 col-form-label">Loại dự án</label>
+                        <select name="project_type" id="project_type_input" class="form-control">
+                            {% for type in project_types %}
+                            {% if type == project.project_type %}
+                            <option value="{{type}}" selected>{{type}}</option>
+                            {% else %}
+                            <option value="{{type}}" disabled>{{type}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class='form-group row'>
+                        <label for="majors_input" class="col-sm-4 col-form-label">Lĩnh vực</label>
+                        <select name="majors" id="majors_input" class="form-control" multiple>
+                            {% for major in majors %}
+                            {% if major in project.majors.all %}
+                            <option value="{{major}}" selected disabled>{{major}}</option>
+                            {% else %}
+                            <option value="{{major}}" disabled>{{major}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <small id='majors-error' style="color: red;"></small>
+                    </div>
+                    <div class='form-group row'>
+                        <label for="deadline_input" class="col-sm-4 col-form-label">Thời hạn</label>
+                        <input type="datetime-local" readonly id="deadline_input" class='form-control' value="{{project.deadline|date:'c'}}">
+                    </div>
+                    <div class='form-group row'>
+                        <label for="description_input" class="col-sm-4 col-form-label">Mô tả</label>
+                        <textarea readonly id="description_input" class='form-control'>{{project.describe}}</textarea>
+                    </div>
+                    <div class='form-group' id='progress-area'>
+                        <label for="progress" class="col-form-label">Tiến trình</label>
+                        <p id='progress' class="col-form-label">{{project.progress}}%</p>
+                    </div>
+                    {% if project.design_confirm == project.DesignConfirm.YES %}
+                    <div class='form-group row' id='file-input-area'>
+                        <label for="file" class="col-sm-4 col-form-label">File</label>
+                        <a id='design-file' class='col-form-label' href="{{ project.design_file.url }}">File thiết kế</a>
+                    </div>
+                    {% else %}
+                    {% endif %}
+                    <div class='form-group row'>
+                        <label for="payment_status" class="col-sm-4 col-form-label">Thanh toán</label>
+                        <h5 class='col-form-label'>{{project.payment_status}}</h5>
+                    </div>
+                    {% if project.final_project_file and project.payment_status == project.PaymentStatus.FULLY_PAYED %}
+                    <div class='form-group row'>
+                        <label for="payment_status" class="col-sm-4 col-form-label">Sản phẩm</label>
+                        <a href="{{ project.final_project_file.url }}" class='col-form-label'>Tải xuống</a>
+                    </div>
+                    {% elif project.final_project_file and project.payment_status == project.PaymentStatus.WAITING_FOR_PAYING %}
+                    <div class='form-group row'>
+                        <label for="payment_status" class="col-sm-4 col-form-label">Sản phẩm</label>
+                        <a class='col-form-label'>Quý khách vui lòng thanh toán để nhận được sản phẩm</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div id='paying-btn-area'>
+                    {% if project.payment_status == project.PaymentStatus.WAITING_FOR_DEPOSIT %}
+                    <a class='btn btn-primary' href="{% url 'project:pay' project.pk %}">Đặt cọc</a>
+                    {% elif project.payment_status == project.PaymentStatus.WAITING_FOR_PAYING %}
+                    <a class='btn btn-primary' href="{% url 'project:pay' project.pk %}">Thanh toán</a>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class='col'></div>
+        </div>
+    </div>
+</section>
+
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xóa?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            Xóa dự án ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name='delete-project' class="btn btn-primary" id='delete-confirm-btn' style="background-color: red;border:none">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block js %}
+<script>
+    function postUpdatingData(){
+        $.ajax({
+            type:"POST",
+            url:"{% url 'project:ajax-change-project' %}",
+            datatype:'json',
+            data:{
+                csrfmiddlewaretoken:"{{csrf_token}}",
+                project_id:"{{project.pk}}",
+                project_name:$("#project_name_input").val(),
+                project_type:$("#project_type_input").val(),
+                majors:$("#majors_input").val(),
+                deadline:$("#deadline_input").val(),
+                description:$("#description_input").text(),
+            },  
+            success:function(data){
+                /* if(data.file !== undefined){
+                    if($("#file-input-area").length){
+                        $("a#design-file").attr("href",data.file)
+                    }
+                    else{
+                        $("#progress-area").after(
+                        `<div class='form-group' id='file-input-area'>
+                            <label for="design_file_input" class="col-sm-4 col-form-label">File</label>
+                            <a id='design-file' class='col-form-label' href="${data.file}">File thiết kế</a>
+                        </div>`
+                        )
+                    }
+                }
+                else{
+                    if($("#file-input-area").length){
+                        $("#file-input-area").remove();
+                    }
+                } */
+                /* $("#design_file_input").remove(); */
+                $("#repair-project-btn").attr("hidden",false);
+                $("#change-confirm-btn").attr("hidden",true);
+                $("input").attr("readonly",true);
+                $("option").attr("disabled",true);
+                $("textarea").attr("readonly",true);
+                if($("#project-name-error").text().length > 0){
+                    $("#project-name-error").text("");
+                }
+                if($("#majors-error").text().length > 0){
+                    $("majors-error").text("");
+                }
+            },
+            error:function($xhr,textStatus,errorThrown){
+                if($xhr.responseJSON.project_name_response !== undefined){
+                    $("#project-name-error").text(`${$xhr.responseJSON.project_name_response}`);
+                }
+                else{
+                    if($("#project-name-error").text().length > 0){
+                        $("#project-name-error").text("");
+                    }
+                }
+                if($xhr.responseJSON.majors_response !== undefined){
+                    $("#majors-error").text(`${$xhr.responseJSON.majors_response}`);
+                }
+                else{
+                    if($("#majors-error").text().length > 0){
+                        $("majors-error").text("");
+                    }
+                }
+            }
+        })
+    }
+
+    function changeForm(lock=true){
+        if(lock === false){
+            $("#repair-project-btn").attr("hidden",true);
+            $("#change-confirm-btn").attr("hidden",false);
+            $("input").attr("readonly",false);
+            $("textarea").attr("readonly",false);
+            $("option").attr("disabled",false);
+            /* if($("div#file-input-area").length){
+                $("div#file-input-area").append(`
+                    <input type='file' id='design_file_input' class='form-control'></input>`
+                )
+            }
+            else{
+                $("#progress-area").after(
+                    `<div class='form-group' id='file-input-area'>
+                        <label for="design_file_input" class="col-sm-4 col-form-label">File</label>
+                        <input type='file' id='design_file_input' class='form-control'></input>
+                    </div>`
+                )
+            } */
+        }
+        else if(lock === true){
+            postUpdatingData();
+        }
+    }
+    $(document).ready(function(){
+        $("#repair-project-btn").click(function(){
+            changeForm(false);
+        })
+    })
+    $(document).ready(function(){
+        $("#change-confirm-btn").click(function(){
+            changeForm(true);
+        })
+    })
+</script>
+{% endblock js %}

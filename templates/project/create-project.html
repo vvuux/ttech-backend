@@ -1,0 +1,177 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+Create Project
+{% endblock title %}
+
+{% block header %}
+Create Your Project
+{% endblock header %}
+
+{% block content %}
+<section id='create-project-area'>
+    <div class='container'>
+        <form id='create-project-form' action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if unfinished_project %}
+            <div id='info_area'>
+                <div class='form-group'>
+                    <label for="project_name_input" class="col-sm-2 col-form-label">Dự án: </label>
+                    <input type="text" name='project_name' class='form-control' id='project_name_input' value="{{unfinished_project.project_name}}" placeholder="Tên dự án" required>   
+                </div>
+                <div class="form-group">
+                    <label for="project_type_select" class="col-sm-2 col-form-label">Loại: </label>
+                    <select class='form-control' name="type" id="project_type_select" required>
+                        <option value="">None</option>
+                        {% for type in project_types %}
+                        {% if type == unfinished_project.project_type %}
+                        <option value="{{type.type}}" selected>{{type.type}}</option>
+                        {% else %}
+                        <option value="{{type.type}}">{{type.type}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="majors_select" class="col-sm-2 col-form-label">Lĩnh vực: </label>
+                    <select class='form-control' multiple name="majors" id="majors_select" required>
+                        {% for major in majors %}
+                        {% if major in unfinished_project.majors.all %}
+                            <option selected value="{{major}}">{{major.major}}</option>
+                        {% else %}
+                            <option value="{{major}}">{{major.major}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price_input" class="col-sm-2 col-form-label">Giá: </label>
+                    <p id='project_price'>{{unfinished_project.project_type.price|price}}</p>
+                </div>
+                <div class='form-group'>
+                    <label for="deadline_input" class="col-sm-2 col-form-label">Thời hạn: </label>
+                    <input type="datetime-local" name="deadline" id="deadline_input" class="form-control" value='{{unfinished_project.deadline}}' required>
+                    <p><small>Thời gian giao sản phẩm ít nhất 1 tháng kể từ ngày xác nhận</small></p>
+                </div>
+                <div class='form-group'>
+                    <label for="design_confirm" class="col-sm-4 col-form-label">Bạn đã có thiết kế chưa? </label>
+                    <input type="radio" name="design_confirm" id="yes_radio" value="Có" required>
+                    <label for="yes" style="font-weight: normal;">Có</label>
+                    <input type="radio" name="design_confirm" id="no_radio" value="Không" style="margin-left:30px">
+                    <label for="no" style="font-weight: normal;">Chưa có</label>
+                </div>
+                <div class="form-group" id='file_input_area' hidden>
+                    <label for="file_input">File thiết kế</label>
+                    <input type="file" class='form-control' name="file" id="file_input">
+                </div>
+                <div class='form-group row'>
+                    <label for="describe_input" class="col-sm-2 col-form-label">Mô tả: </label>
+                    <textarea class="form-control" name="describe" id="describe_input" cols="30" rows="10" maxlength="10000" placeholder="Tổi đa 10000 ký tự">{{unfinished_project.describe}}</textarea>
+                </div>
+                <div id='btn_area'>
+                    <button type="submit" class="button" name='create_project_btn' id='create_project_btn'>Next</button>
+                </div>
+            </div>
+            {% else %}
+            <div id='info_area'>
+                <div class='form-group'>
+                    <label for="project_name_input" class="col-sm-2 col-form-label">Dự án: </label>
+                    <input type="text" name='project_name' class='form-control' id='project_name_input' placeholder="Tên dự án" required>   
+                </div>
+                <div class="form-group">
+                    <label for="project_type_select" class="col-sm-2 col-form-label">Loại: </label>
+                    <select class='form-control' name="type" id="project_type_select" required>
+                        <option value="">None</option>
+                        {% for type in project_types %}
+                        <option value="{{type.type}}">{{type.type}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="majors_select" class="col-sm-2 col-form-label">Lĩnh vực: </label>
+                    <select class='form-control' multiple name="majors" id="majors_select" required>
+                        {% for major in majors %}
+                            <option value="{{major}}">{{major.major}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price_input" class="col-sm-2 col-form-label">Giá: </label>
+                    <p id='project_price'>0</p>
+                </div>
+                <div class='form-group'>
+                    <label for="deadline_input" class="col-sm-2 col-form-label">Thời hạn: </label>
+                    <input type="datetime-local" name="deadline" id="deadline_input" class="form-control" required>
+                    <p><small>Thời gian giao sản phẩm ít nhất 1 tháng kể từ ngày xác nhận</small></p>
+                </div>
+                <div class='form-group'>
+                    <label for="design_confirm" class="col-sm-4 col-form-label">Bạn đã có thiết kế chưa? </label>
+                    <input type="radio" name="design_confirm" id="yes_radio" value="Có" required>
+                    <label for="yes" style="font-weight: normal;">Có</label>
+                    <input type="radio" name="design_confirm" id="no_radio" value="Không" style="margin-left:30px">
+                    <label for="no" style="font-weight: normal;">Chưa có</label>
+                </div>
+                <div class="form-group"  id='file_input_area' hidden>
+                    <label for="file_input" class="col-sm-2 col-form-label">File thiết kế</label>
+                    <input type="file" class='form-control' name="file" id="file_input">
+                </div>
+                <div class='form-group'>
+                    <label for="describe_input" class="col-sm-2 col-form-label">Mô tả: </label>
+                    <textarea class="form-control" name="describe" id="describe_input" cols="30" rows="10" maxlength="10000" placeholder="Tổi đa 10000 ký tự"></textarea>
+                </div>
+                <div id='btn_area'>
+                    <button type="submit" class="button" name='create_project_btn' id='submit-project-btn'>Next</button>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</section>
+{% endblock content %}
+
+{% block js %}
+<script>
+document.getElementById('yes_radio').onclick = displayFileInput;
+document.getElementById('no_radio').onclick = hideFileInput;
+
+function displayFileInput(){
+    document.getElementById('file_input_area').hidden = false;
+    document.getElementById('file_input').setAttribute('required',"")
+}
+function hideFileInput(){
+    document.getElementById('file_input_area').hidden = true;
+    document.getElementById('file_input').removeAttribute('required')
+}
+
+</script>
+<script>
+    function ajaxPrice(){
+        console.log(1)
+        $(document).ready(function(){
+            $("select#project_type_select").change(function(){
+                console.log(($(this)).val())
+                if(($(this)).val() === ''){
+                    $("p#project_price").text(0);
+                }
+                else{
+                    $.ajax({
+                        type:'POST',
+                        url: "{% url 'project:ajax-show-price' %}",
+                        datatype:'json',
+                        data:{
+                            csrfmiddlewaretoken: "{{csrf_token}}",
+                            project_type: $("select#project_type_select").val()
+                        },
+                        success:function(data){
+                            $("p#project_price").text(Number(data.price).toLocaleString());
+                        }
+                    })
+                }
+            })
+        })
+    }
+    ajaxPrice();
+</script>
+{% endblock js %}

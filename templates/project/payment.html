@@ -1,0 +1,134 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+Đặt Cọc Dự Án
+{% endblock title %}
+
+{% block header %}
+Đặt Cọc Dự Án
+{% endblock header %}
+
+{% block content %}
+<section id='deposit-area'>
+    <div class='container'>
+        <div class='row'>
+            <div id='project-info-container' class='col-md-6'>
+                <h3 style="text-align: center;">Thông tin dự án</h3>
+                <div id='project-info-area'>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label" for="project-pk-info">Mã dự án:</label>
+                        <p class='col-form-label' id="project-pk-info">{{ project.pk }}</p>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label" for="project-name-info">Tên dự án:</label>
+                        <p class='col-form-label' id="project-name-info">{{ project.project_name }}</p>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label" for="project-user-info">User:</label>
+                        <p class='col-form-label' id="project-user-info">{{ project.user.username }}</p>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label" for="project-type-info">Loại:</label>
+                        <p class='col-form-label' id="project-type-info">{{ project.project_type }}</p>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label" for="project-price-info">Giá:</label>
+                        <p class='col-form-label' id="project-price-info">{{ project.project_type.price|devide_into_two|price }}</p>
+                    </div>
+                </div>
+            </div>
+            <div id='payment-method-area' class='col-md-6' >
+                <div id="payment-method-form">
+                    <form action="" method='post'>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <p style='font-weight:bold'>Chọn phương thức thanh toán</p>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="payment-method" value="Thẻ ngân hàng" id="card-radio" required checked>
+                                <label class="form-check-label" for="card-radio">Thẻ ngân hàng <span style='color:gray'>(qua cổng VNPAY)</span></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="payment-method" value='Ví điện tử' id='e-wallet-radio'>
+                                <label class="form-check-label" for="e-wallet-radio">Ví điện tử Momo <img src="{% static 'momo/logo/momo.png' %}" height="10%" width="10%"></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="payment-method" value="Thẻ thanh toán quốc tế" id="visa-mastercard-radio">
+                                <label class="form-check-label" for="visa-mastercard-radio">Thẻ thanh toán quốc tế VISA,MASTERCARD,JCB <span style='color:gray'>(qua cổng VNPAY)</span></label>
+                            </div>
+                            <div class="form-group" id='bank-select-area' >
+                                <label for="bank-select" class='form-col-label'style="font-weight: bold;color:gray">Chọn ngân hàng:</label>
+                                <select name="bankcode" class='form-control' id="bank-select">
+                                    {% for bank in banks %}
+                                    <option value="{{ bank.bankcode }}">{{ bank.bankcode }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class='btn btn-primary' id='bankcard-btn' style="margin-top:10px">Next</button>
+                            </div>
+                            <div class="form-group" id='international-payment-select-area' hidden>
+                                <label for="international-payment-select" class='form-col-label' style="font-weight: bold;color:gray">Chọn:</label>
+                                <select name="international-payment" class='form-control' id="international-payment-select">
+                                    {% for international_payment in international_payments %}
+                                    <option value="{{ international_payment.bankcode }}">{{ international_payment.bankcode }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class='btn btn-primary' type="submit" id='international-payment-btn' style="margin-top:10px">Next</button>
+                            </div>
+                            <div class='form-group' id='e-wallet-payment-btn' style="margin-top:10px" hidden>
+                                <button class='btn btn-primary' type="submit" >Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block js %}
+<script>
+    document.getElementById('card-radio').addEventListener('change',function(){
+        if(document.getElementById('card-radio').checked === true){
+            document.getElementById('bank-select-area').hidden = false;
+            document.getElementById('e-wallet-payment-btn').hidden = true;
+            document.getElementById('bank-select').disabled = false;
+            document.getElementById('international-payment-select-area').hidden = true;
+            document.getElementById('international-payment-select').disabled = true;
+        }
+        else{
+            document.getElementById('bank-select-area').hidden = true;
+        }
+    });
+
+    document.getElementById('visa-mastercard-radio').addEventListener('change',function(){
+        if(document.getElementById('visa-mastercard-radio').checked === true){
+            document.getElementById('international-payment-select-area').hidden = false;
+            document.getElementById('bank-select-area').hidden = true;
+            document.getElementById('e-wallet-payment-btn').hidden = true;
+            document.getElementById('bank-select').disabled = true;
+            document.getElementById('international-payment-select').disabled = false;
+        }
+        else{
+            document.getElementById('international-payment-select-area').hidden = true;
+        }
+    });
+
+    document.getElementById('e-wallet-radio').addEventListener('change',function(){
+        if(document.getElementById('e-wallet-radio').checked === true){
+            document.getElementById('e-wallet-payment-btn').hidden = false;
+            document.getElementById('international-payment-select-area').hidden = true;
+            document.getElementById('bank-select-area').hidden = true;
+            document.getElementById('bank-select').disabled = true;
+            document.getElementById('international-payment-select').disabled = true;
+        }
+        else{
+            document.getElementById('e-wallet-payment-btn').hidden = true;
+        }
+    });
+
+
+</script>
+
+{% endblock js %}

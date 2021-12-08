@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+Your Projects 
+{% endblock title %}
+
+{% block header %}
+Your Projects
+{% endblock header %}
+
+{% block content %}
+<section id='project-management-area'>
+    <div class="container">
+        <div id='project-btn-area'>
+            <a href="{% url 'project:create-project' %}" id='create-project-btn' ><i class='fas fa-plus' style="margin-right:5px;"></i>Tạo</a>
+        </div>
+        <div class='table-container'>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên Dự Án</th>
+                    <th scope="col">Loại</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Ngày Tạo</th>
+                    <th scope="col">Tiến Độ</th>
+                    <th scope="col">Thanh Toán</th>
+                    <th scope="col">Chi Tiết</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% if projects.count > 0 %}
+                    {% for project in projects.all %}
+                    <tr>
+                        <th style="vertical-align: middle;" scope="row">{{ forloop.counter }}</th>
+                        <td style="vertical-align: middle;">{{project.project_name}}</td>
+                        <td style="vertical-align: middle;">{{project.project_type}}</td>
+                        <td style="vertical-align: middle;">{{project.project_type.price|price}}</td>
+                        <td style="vertical-align: middle;">{{project.deadline}}</td>
+                        <td style="vertical-align: middle;">{{project.progress}}%</td>
+                        <td style="vertical-align: middle;">{{project.payment_status}}</td>
+                        <td style="vertical-align: middle;"><a id='detail-project-btn' href="{% url 'project:project-detail' project.pk %}">Chi tiết</a></td>
+                        <td style="vertical-align: middle;" id='crud-btn-area'>
+                            <a href="">
+                                <i class="fas fa-tools"></i>
+                            </a>
+                            <a href="">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+    
+                    {% else %}
+                    <tr>
+                        <td colspan="9" style='text-align:center;font-size:large;vertical-align:middle'><b>Không có dự án nào</b></td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% include 'base/pagination.html' %}
+{% endblock content %}

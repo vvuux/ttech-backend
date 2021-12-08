@@ -1,0 +1,287 @@
+{% extends 'base/dashboard-base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+{{user.username}} 
+{% endblock title %}
+
+{% block link %}
+    <link href="{% static 'dashboard/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/vendor/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+{% endblock link %}
+
+{% block content %}
+    <!--**********************************
+        Content body start
+    ***********************************-->
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="welcome-text">
+                        <h4>Hi, welcome back!</h4>
+                        <p class="mb-0">Your business dashboard template</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">App</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Profile</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="profile">
+                        <div class="profile-head">
+                            <div class="photo-content">
+                                <div class="cover-photo"></div>
+                                <div class="profile-photo">
+                                    <img src="{% static 'images/anonymous-avatar.png' %}" class="img-fluid rounded-circle" alt="">
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <div class="row justify-content-center">
+                                    <div class="col-xl-8">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-sm-4 border-right-1 prf-col">
+                                                <div class="profile-name">
+                                                    <h4 class="text-primary">{{ user.last_name }} {{ user.first_name }}</h4>
+                                                    <p>Name</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-sm-4 border-right-1 prf-col">
+                                                <div class="profile-email">
+                                                    <h4 class="text-muted">{{ user.email }}</h4>
+                                                    <p>Email</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-sm-4 prf-col">
+                                                <div class="profile-call">
+                                                    <h4 class="text-muted">{{ user.userprofile.phone }}</h4>
+                                                    <p>Phone No.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="profile-tab">
+                                <div class="custom-tab-1">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item"><a href="#about-me-tab" data-toggle="tab" class="nav-link active show">Thông tin</a>
+                                        </li>
+                                        <li class="nav-item"><a href="#projects-tab" data-toggle="tab" class="nav-link">Dự án</a>
+                                        </li>
+                                        <li class="nav-item"><a href="#permission-tab" data-toggle="tab" class="nav-link">Phân quyền</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="about-me-tab" class="tab-pane fade active show">
+                                            <div class="profile-personal-info">
+                                                <h4 class="pt-4 border-bottom-1 pb-4">Thông tin cá nhân</h4>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Họ tên <span class="pull-right">:</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-9"><span>{{ user.last_name }} {{ user.first_name }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Email <span class="pull-right">:</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-9"><span>{{ user.email }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Username <span class="pull-right">:</span></h5>
+                                                    </div>
+                                                    <div class="col-9"><span>{{ user.username }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Số điện thoại <span class="pull-right">:</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-9"><span>{{ user.userprofile.phone }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Ngày sinh <span class="pull-right">:</span></h5>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <span>{{user.userprofile.birthday|date:"d-m-Y"}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Phân quyền <span class="pull-right">:</span></h5>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <span>
+                                                            {% for group in user.groups.all %}
+                                                                {{group}}
+                                                            {% endfor %}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-3">
+                                                        <h5 class="f-w-500">Số dự án đã hoàn thành <span class="pull-right">:</span></h5>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <span>
+                                                            {{ user.userprofile.number_of_finished_project }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="projects-tab" class="tab-pane fade">
+                                            <div class="pt-3">
+                                                <div class="settings-form">
+                                                    <h4 class="">Dự án của {{user.username}}</h4>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h4 class="card-title">Tất cả dự án</h4>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="table-responsive">
+                                                                        <table id="example" class="display" style="min-width: 845px">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Tên dự án</th>
+                                                                                    <th>User</th>
+                                                                                    <th>Loại</th>
+                                                                                    <th>Thời hạn</th>
+                                                                                    <th>Thanh toán</th>
+                                                                                    <th>Tiến trình</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                {% for project in user.projects.all %}
+                                                                                <tr>
+                                                                                    <td><a href="{% url 'administrator:project-detail-dashboard' pk=project.pk%}">{{ project.project_name }}</a></td>
+                                                                                    <td><a href="{% url 'administrator:user-profile' pk=project.user.pk %}">{{ project.user }}</a></td>
+                                                                                    <td>{{ project.project_type }}</td>
+                                                                                    <td>{{ project.deadline }}</td>
+                                                                                    <td>{{ project.payment_status }}</td>
+                                                                                    <td>{{ project.progress }}</td>
+                                                                                </tr>
+                                                                                {% endfor %}
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Tên dự án</th>
+                                                                                    <th>User</th>
+                                                                                    <th>Loại</th>
+                                                                                    <th>Thời hạn</th>
+                                                                                    <th>Thanh toán</th>
+                                                                                    <th>Tiến trình</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="permission-tab" class="tab-pane fade">
+                                            <div class="pt-3">
+                                                <div class="settings-form">
+                                                    <h4 class="">Phân quyền</h4>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class='form-group'>
+                                                                <label for="permission-select" class="">Chọn</label>
+                                                                <select multiple name="permission" id="permission-select" class="form-control">
+                                                                    {% for group in groups %}
+                                                                    {% if group in user.groups.all %}
+                                                                        <option value="{{ group }}" selected>{{ group }}</option>
+                                                                    {% else %}
+                                                                        <option value="{{ group }}">{{ group }}</option>    
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                                <small id='permission-error' style="color: red;"></small>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="button" id="save-permission-btn" class="btn btn-primary">Lưu</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'dashboard/vendor/global/global.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/quixnav-init.js' %}"></script>
+    <script src="{% static 'dashboard/js/custom.min.js' %}"></script>
+
+    <!-- Datatable -->
+    <script src="{% static 'dashboard/vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/plugins-init/datatables.init.js' %}"></script>
+
+    <!-- Save event -->
+    <script>
+        $(document).ready(function(){
+            $("#save-permission-btn").click(function(){
+                $.ajax({
+                    type:"POST",
+                    url:"{% url 'administrator:ajax-permission-update' %}",
+                    datatype:"json",
+                    data:{
+                        csrfmiddlewaretoken:"{{ csrf_token }}",
+                        user:"{{request.user.pk}}",
+                        permission: $("#permission-select").val()
+                    },
+                    success:function(data){
+                        if($("#permission-error").text.length > 0){
+                            $("#permission-error").text("")
+                        }
+                        alert(`${data.message}`);
+                    },
+                    error:function($jqXHR,textStatus,errorThrown){
+                        $("#permission-error").text($jqXHR.responseJSON.message)
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock script %}
+

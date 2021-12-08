@@ -1,0 +1,233 @@
+{% extends 'base/dashboard-base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+Projects
+{% endblock title %}
+
+{% block link %}
+    <link href="{% static 'dashboard/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/vendor/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+{% endblock link %}
+
+{% block content %}
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="welcome-text">
+                        <h4>Hi, welcome back!</h4>
+                        <span class="ml-1">Datatable</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Datatable</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- row -->
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Tất cả dự án</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for project in projects %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:project-detail-dashboard' pk=project.pk%}">{{ project.project_name }}</a></td>
+                                            <td><a href="{% url 'administrator:user-profile' pk=project.user.pk %}">{{ project.user }}</a></td>
+                                            <td>{{ project.project_type }}</td>
+                                            <td>{{ project.deadline }}</td>
+                                            <td>{{ project.payment_status }}</td>
+                                            <td>{{ project.progress }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Các dự án đang thực hiện</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example2" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for project in deposited_projects %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:project-detail-dashboard' pk=project.pk%}">{{ project.project_name }}</a></td>
+                                            <td><a href="{% url 'administrator:user-profile' pk=project.user.pk %}">{{ project.user }}</a></td>
+                                            <td>{{ project.project_type }}</td>
+                                            <td>{{ project.deadline }}</td>
+                                            <td>{{ project.payment_status }}</td>
+                                            <td>{{ project.progress }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Các dự án đã hoàn thành</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example3" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for project in finished_projects.all %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:project-detail-dashboard' pk=project.pk%}">{{ project.project_name }}</a></td>
+                                            <td><a href="{% url 'administrator:user-profile' pk=project.user.pk %}">{{ project.user }}</a></td>
+                                            <td>{{ project.project_type }}</td>
+                                            <td>{{ project.deadline }}</td>
+                                            <td>{{ project.payment_status }}</td>
+                                            <td>{{ project.progress }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Các dự án đã thanh toán</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for project in payed_projects.all %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:project-detail-dashboard' pk=project.pk%}">{{ project.project_name }}</a></td>
+                                            <td><a href="{% url 'administrator:user-profile' pk=project.user.pk %}">{{ project.user }}</a></td>
+                                            <td>{{ project.project_type }}</td>
+                                            <td>{{ project.deadline }}</td>
+                                            <td>{{ project.payment_status }}</td>
+                                            <td>{{ project.progress }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên dự án</th>
+                                            <th>User</th>
+                                            <th>Loại</th>
+                                            <th>Thời hạn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Tiến trình</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'dashboard/vendor/global/global.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/quixnav-init.js' %}"></script>
+    <script src="{% static 'dashboard/js/custom.min.js' %}"></script>
+
+    <!-- Datatable -->
+    <script src="{% static 'dashboard/vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/plugins-init/datatables.init.js' %}"></script>
+{% endblock script %}
+

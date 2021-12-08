@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+Login
+{% endblock title %}
+
+{% block header %}
+Login
+{% endblock header %}
+
+{% block content %}
+<section id='login-register-form'>
+    <div class="container">
+        <div class='row'>
+            <div id='login-form-area' class="col-md-6">
+                <div id='login-form-title'>
+                    <h3>Login</h3>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class='form-group'>
+                        <label class='form-label' for="login-username-input">Username</label>
+                        <input type="text" id='login-username-input' class='form-control' name='lg-username' placeholder="Username" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="login-password-input">Password</label>
+                        <input type="password" id='login-password-input' class='form-control' name='lg-password' placeholder="Password" required>
+                    </div>
+                    <button type="submit" name='login' class='btn btn-primary'>Login</button>
+                </form>
+            </div>
+            <div id='signup-form-area' class="col-md-6">
+                <div id='signup-form-title'>
+                    <h3>Sign Up</h3>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class=form-group>
+                        <label class='form-label' for="signup-username-input">Username</label>
+                        <input type="text" id='signup-username-input' class='form-control' name='signup-username' placeholder="Username" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-email-input">Email</label>
+                        <input type="email" id='signup-email-input' class='form-control' name='signup-email' placeholder="Email" required>
+                    </div>            
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-firstname-input">Tên</label>
+                        <input type="text" id='signup-firstname-input' class='form-control' name='signup-firstname' placeholder="Tên" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-lastname-input">Họ</label>
+                        <input type="text" id='signup-lastname-input' class='form-control' name='signup-lastname' placeholder="Họ" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-phone-input">Số điện thoại</label>
+                        <input type="text" id='signup-phone-input' maxlength="10" class='form-control' name='signup-phone' placeholder="Số điện thoại" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-password-input">Password</label>
+                        <input type="password" id='signup-password-input' class='form-control' name='signup-password' placeholder="Password" required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label' for="signup-password-again-input">Password (again)</label>
+                        <input type="password" id='signup-password-again-input' class='form-control' name='signup-password-again' placeholder="Password (Again)" required>
+                    </div>
+                    <button type="submit" name='signup' class='btn btn-primary'>Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

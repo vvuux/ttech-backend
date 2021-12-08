@@ -1,0 +1,148 @@
+{% extends 'base/dashboard-base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+Users
+{% endblock title %}
+
+{% block link %}
+    <link href="{% static 'dashboard/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/vendor/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+{% endblock link %}
+
+{% block content %}
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="welcome-text">
+                        <h4>Hi, welcome back!</h4>
+                        <span class="ml-1">Datatable</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Datatable</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- row -->
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Tất cả người dùng</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên người dùng</th>
+                                            <th>Email</th>
+                                            <th>Phân quyền</th>
+                                            <th>Lần đăng nhập cuối</th>
+                                            <th>Số dự án đăng ký</th>
+                                            <th>Số dự án đang hoàn thành</th>
+                                            <th>Số dự án hoàn thành</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users.all %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:user-profile' pk=user.user.pk %}">{{ user.user.username }}</a></td>
+                                            <td>{{ user.user.email }}</td>
+                                            <td>
+                                            {% for group in user.user.groups.all %}
+                                            {{ group }}
+                                            {% endfor %}
+                                            </td>
+                                            <td>{{ user.user.last_login }}</td>
+                                            <td>{{ user.number_of_project }}</td>
+                                            <td>{{ user.number_of_deposited_project }}</td>
+                                            <td>{{ user.number_of_finished_project }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên người dùng</th>
+                                            <th>Email</th>
+                                            <th>Phân quyền</th>
+                                            <th>Lần đăng nhập cuối</th>
+                                            <th>Số dự án đăng ký</th>
+                                            <th>Số dự án đang hoàn thành</th>
+                                            <th>Số dự án hoàn thành</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Những tài khoản có quyền quản trị</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example2" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên người dùng</th>
+                                            <th>Email</th>
+                                            <th>Phân quyền</th>
+                                            <th>Lần đăng nhập cuối</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in admin_users %}
+                                        <tr>
+                                            <td><a href="{% url 'administrator:user-profile' pk=user.pk %}">{{ user.username }}</a></td>
+                                            <td>{{ user.email }}</td>
+                                            <td>
+                                            {% for group in user.groups.all %}
+                                            {{ group }}
+                                            {% endfor %}
+                                            </td>
+                                            <td>{{ user.last_login }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên người dùng</th>
+                                            <th>Email</th>
+                                            <th>Phân quyền</th>
+                                            <th>Lần đăng nhập cuối</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'dashboard/vendor/global/global.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/quixnav-init.js' %}"></script>
+    <script src="{% static 'dashboard/js/custom.min.js' %}"></script>
+
+    <!-- Datatable -->
+    <script src="{% static 'dashboard/vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/plugins-init/datatables.init.js' %}"></script>
+{% endblock script %}
+

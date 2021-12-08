@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+	<title>{% block title %}{% endblock title %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="description" content="Bingo One page parallax responsive HTML Template">
+	<!-- Mobile Specific Meta
+	================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Favicon -->
+	<!-- <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png" /> -->
+	<!-- CSS
+	================================================== -->
+	<!-- Themefisher Icon font -->
+	<link rel="stylesheet" href="{% static 'ttechInfo/plugins/themefisher-font/style.css' %}">
+	<!-- bootstrap.min css -->
+	<link rel="stylesheet" href="{% static 'ttechInfo/plugins/bootstrap/css/bootstrap.min.css' %}">
+	<!-- Lightbox.min css -->
+	<link rel="stylesheet" href="{% static 'ttechInfo/plugins/lightbox2/dist/css/lightbox.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'ttechInfo/plugins/animate/animate.css' %}">
+	<!-- Slick Carousel -->
+	<link rel="stylesheet" href="{% static 'ttechInfo/plugins/slick/slick.css' %}">
+	<!-- Main Stylesheet -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+	<link rel="stylesheet" href="{% static 'ttechInfo/css/style.css' %}"> 
+</head>
+
+<body id="body">
+	<!--
+	Start Preloader
+	==================================== -->
+	<!-- <div id="preloader">
+		<div class='preloader'>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>  -->
+	<!--
+	End Preloader
+	==================================== -->
+
+	<!--
+	Fixed Navigation
+	==================================== -->
+	<header class="navigation fixed-top">
+		<div class="container">
+			<!-- main nav -->
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<!-- logo -->
+				<a class="navbar-brand logo" href="{% url 'ttechInfo:home' %}">
+					<img class="logo-default" src="{% static 'ttechInfo/images/logo.png' %}" alt="logo"/>
+					<img class="logo-white" src="{% static 'ttechInfo/images/logo-white.png' %}" alt="logo"/>
+				</a>
+				<!-- /logo -->
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+					aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navigation">
+					<ul class="navbar-nav ml-auto text-center">
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'ttechInfo:about' %}">About Us</a>
+						</li>
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'ttechInfo:services' %}">Services</a>
+						</li>
+						<!-- <li class="nav-item ">
+							<a class="nav-link" href="{% url 'ttechInfo:portfolio' %}">Portfolio</a>
+						</li> -->
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'ttechInfo:pricing' %}">Pricing</a>
+						</li>
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'ttechInfo:contact' %}">Contact</a>
+						</li>
+						{% if user.is_authenticated %}
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'project:projects' %}">Your Project</a>
+						</li>
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'user:logout' %}">Logout</a>
+						</li>
+						{% else %}
+						<li class="nav-item ">
+							<a class="nav-link" href="{% url 'user:login' %}">Login</a>
+						</li>
+						{% endif %}
+					</ul>
+				</div>
+			</nav>
+			<!-- /main nav -->
+		</div>
+	</header>
+	<!--
+	End Fixed Navigation
+	==================================== -->
+
+	{% url 'ttechInfo:home' as home %}
+	{% url 'ttechInfo:404' as notfound %}
+	{% url 'index' as index %}
+	{% if request.get_full_path != home and request.get_full_path != notfound and request.get_full_path != index %}
+	<section class="single-page-header">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>{% block header %}{% endblock header %}</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% else %}
+	{% endif %}
+
+	{% block content %}
+
+
+	{% endblock content %}
+	<footer id="footer" class="bg-one">
+	<div class="top-footer">
+		<div class="container">
+		<div class="row">
+			<div class="col-sm-3 col-md-3 col-lg-3">
+			<h3>about</h3>
+			<p>Integer posuere erat a ante venenati dapibus posuere velit aliquet. Fusce dapibus, tellus cursus commodo, tortor mauris sed posuere.</p>
+			</div>
+			<!-- End of .col-sm-3 -->
+
+			<div class="col-sm-3 col-md-3 col-lg-3">
+			<ul>
+				<li><h3>Our Services</h3></li>
+				<li><a href="#">Graphic Design</a></li>
+				<li><a href="#">Web Design</a></li>
+				<li><a href="#">Web Development</a></li>
+			</ul>
+			</div>
+			<!-- End of .col-sm-3 -->
+
+			<div class="col-sm-3 col-md-3 col-lg-3">
+			<ul>
+				<li><h3>Quick Links</h3></li>
+				<li><a href="#">Partners</a></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">FAQ’s</a></li>
+				<li><a href="#">Badges</a></li>
+			</ul>
+			</div>
+			<!-- End of .col-sm-3 -->
+
+			<div class="col-sm-3 col-md-3 col-lg-3">
+			<ul>
+				<li><h3>Connect with us Socially</h3></li>
+				<li><a href="#">Facebook</a></li>
+				<li><a href="#">Twitter</a></li>
+				<li><a href="#">Youtube</a></li>
+				<li><a href="#">Pinterest</a></li>
+			</ul>
+			</div>
+			<!-- End of .col-sm-3 -->
+
+		</div>
+		</div> <!-- end container -->
+	</div>
+	<div class="footer-bottom">
+		<h5>Copyright 2016. All rights reserved.</h5>
+	</div>
+	</footer> <!-- end footer -->
+
+
+    <!-- end Footer Area
+    ========================================== -->
+
+    <!-- 
+    Essential Scripts
+    =====================================-->
+    <!-- Main jQuery -->
+    <script src="{% static 'ttechInfo/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Google Map -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu5nZKbeK-WHQ70oqOWo-_4VmwOwKP9YQ"></script> -->
+    <!-- <script  src="plugins/google-map/gmap.js"></script> -->
+
+    <!-- Form Validation -->
+    <script src="{% static 'ttechInfo/plugins/form-validation/jquery.form.js' %}"></script> 
+    <script src="{% static 'ttechInfo/plugins/form-validation/jquery.validate.min.js' %}"></script>
+    
+    <!-- Bootstrap4 -->
+    <script src="{% static 'ttechInfo/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- Parallax -->
+    <script src="{% static 'ttechInfo/plugins/parallax/jquery.parallax-1.1.3.js' %}"></script>
+    <!-- lightbox -->
+    <script src="{% static 'ttechInfo/plugins/lightbox2/dist/js/lightbox.min.js' %}"></script>
+    <!-- Owl Carousel -->
+    <script src="{% static 'ttechInfo/plugins/slick/slick.min.js' %}"></script>
+    <!-- filter -->
+    <script src="{% static 'ttechInfo/plugins/filterizr/jquery.filterizr.min.js' %}"></script>
+    <!-- Smooth Scroll js -->
+    <script src="{% static 'ttechInfo/plugins/smooth-scroll/smooth-scroll.min.js' %}"></script>
+    
+    <!-- Custom js -->
+    <script src="{% static 'ttechInfo/js/script.js' %}"></script>
+	{% block js %}
+	{% endblock js %}
+</body>
+</html>
+
+

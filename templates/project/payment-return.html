@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block header %}
+{{title}}
+{% endblock header %}
+
+{% block content %}
+<section id='deposit-notification-section'>
+    <div class='container'>
+        <div class=row>
+            <div class='col'></div>
+            <div class='col-6' id='deposit-notification'>
+                {% if result == 'Thành công' %}
+                <div id='return-icon'>
+                    <i class="fa fa-check-circle" aria-hidden="true" style='color:rgb(24, 207, 24);font-size: 180px;'></i>
+                </div>
+                {% else %}
+                <div id='return-icon'>
+                    <i class="fas fa-exclamation-circle" aria-hidden="true" style='color:rgb(231, 44, 44);font-size: 180px;'></i>
+                </div>
+                {% endif %}
+                <div class='payment-info'>
+                    {% if result == 'Thành công' %}
+                    <h1 id='thank-you-title' style="text-align: center;font-family: 'Roboto', sans-serif;font-size:45px">Thank You!</h1>
+                    <h2 id='payment-status' style="margin-bottom:20px;text-align: center;font-family: 'Roboto', sans-serif;">{{result}}</h2>
+                    {% else %}
+                    <h1 id='thank-you-title' style="text-align: center;font-family: 'Roboto', sans-serif;font-size:45px">Oops!</h1>
+                    <h2 id='payment-status' style="margin-bottom:20px;text-align: center;font-family: 'Roboto', sans-serif;">{{result}}</h2>
+                    {% endif %}
+                    <div class='project-detail'>
+                        <p><b>Order Id</b>:<span> #{{order_id}}</span></p>
+                        <p><b>Customer</b>:<span> {{request.user.last_name}} {{request.user.first_name}}</span></p>
+                        <p><b>Value</b>:<span> {{amount|price}} </span></p>
+                        <p><b>Order Description</b>:<span> {{order_desc}} </span></p>
+                        <p><b>Transaction No</b>:<span> {{vnp_TransactionNo}} </span></p>
+                        <p><b>Response Code</b>:<span> {{vnp_ResponseCode}} </span></p>
+                        <p><b>Time</b>:<span> {{time}} </span></p>
+                    </div>
+                    <div id='payment-return-btn-area'>
+                        {% if result == 'Thành công' %}
+                        <a class='btn btn-primary' style="background-color: rgb(138, 138, 138);border:none" href="{% url 'ttechInfo:home' %}">Home</a>
+                        <a class='btn btn-primary' style="background-color: rgb(138, 138, 138);border:none" href="{% url 'project:projects' %}">Your Projects</a>
+                        {% else %}
+                        <a class='btn btn-primary' style="background-color: rgb(138, 138, 138);border:none" href="{% url 'ttechInfo:home' %}">Home</a>
+                        <a class='btn btn-primary' style="background-color: rgb(138, 138, 138);border:none" href="{% url 'project:pay' project.pk %}">Thử lại</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class='col'></div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
